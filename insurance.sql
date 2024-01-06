@@ -96,6 +96,7 @@ INSERT INTO PARTICIPATED VALUES
 
 
 SELECT *FROM PERSON;
+/*
 +-----------+--------+----------------+
 | driver_id | name   | address        |
 +-----------+--------+----------------+
@@ -106,8 +107,10 @@ SELECT *FROM PERSON;
 | 01AB15    | Soumya | Mandya         |
 +-----------+--------+----------------+
 5 rows in set (0.01 sec)
+*/
 
 SELECT *FROM CAR;
+/*
 +------------+----------+------+
 | regno      | model    | year |
 +------------+----------+------+
@@ -118,8 +121,10 @@ SELECT *FROM CAR;
 | KA09MD3434 | BMW      | 2018 |
 +------------+----------+------+
 5 rows in set (0.00 sec)
+*/
 
 SELECT *FROM ACCIDENT;
+/*
 +---------------+------------+-----------+
 | report_number | acc_date   | location  |
 +---------------+------------+-----------+
@@ -130,8 +135,10 @@ SELECT *FROM ACCIDENT;
 |          1025 | 2023-01-01 | Bengaluru |
 +---------------+------------+-----------+
 5 rows in set (0.00 sec)
+*/ 
 
 SELECT *FROM OWNS;
+/*
 +-----------+------------+
 | driver_id | regno      |
 +-----------+------------+
@@ -142,8 +149,10 @@ SELECT *FROM OWNS;
 | 01AB15    | KA09MD3434 |
 +-----------+------------+
 5 rows in set (0.00 sec)
+*/ 
 
 SELECT *FROM PARTICIPATED;
+/*
 +-----------+------------+---------------+---------------+
 | driver_id | regno      | report_number | damage_amount |
 +-----------+------------+---------------+---------------+
@@ -154,42 +163,45 @@ SELECT *FROM PARTICIPATED;
 | 01AB15    | KA09MD3434 |          1025 |        700000 |
 +-----------+------------+---------------+---------------+
 5 rows in set (0.00 sec)
-
+*/
   
 -- Find the total number of people who owned cars that were involved in accidents in 2021
 SELECT COUNT(driver_id) 
 FROM PARTICIPATED p, ACCIDENT a
 WHERE p.report_number=a.report_number AND a.acc_date LIKE "2021%";
+/*
 +------------------+
 | COUNT(driver_id) |
 +------------------+
 |                3 |
 +------------------+
 1 row in set (0.03 sec)
-
+*/
   
 -- Find the number of accidents in which the cars belonging to “Smith” were involved.
 SELECT COUNT(DISTINCT a.report_number) 
 FROM PARTICIPATED ptd, PERSON p, ACCIDENT a 
 WHERE ptd.driver_id=p.driver_id and ptd.report_number=a.report_number AND p.name LIKE '%smith%';
+/*
 +---------------------------------+
 | COUNT(DISTINCT a.report_number) |
 +---------------------------------+
 |                               2 |
 +---------------------------------+
 1 row in set (0.01 sec)
-
+*/
   
 -- Add a new accident to the database; assume any values for required attributes.
 INSERT INTO ACCIDENT VALUES
 (1026, '2023-04-04', 'Chennai');
-Query OK, 1 row affected (0.04 sec)
+--Query OK, 1 row affected (0.04 sec)
   
 INSERT INTO PARTICIPATED VALUES 
 ('01AB14','KA09MB1212',1026,65000);
-Query OK, 1 row affected (0.04 sec)
+--Query OK, 1 row affected (0.04 sec)
 
 SELECT *FROM ACCIDENT;
+/*
 +---------------+------------+-----------+
 | report_number | acc_date   | location  |
 +---------------+------------+-----------+
@@ -201,8 +213,9 @@ SELECT *FROM ACCIDENT;
 |          1026 | 2023-04-04 | Chennai   |
 +---------------+------------+-----------+
 6 rows in set (0.00 sec)
-
+*/
 SELECT *FROM PARTICIPATED;
+/*
 +-----------+------------+---------------+---------------+
 | driver_id | regno      | report_number | damage_amount |
 +-----------+------------+---------------+---------------+
@@ -214,14 +227,15 @@ SELECT *FROM PARTICIPATED;
 | 01AB14    | KA09MB1212 |          1026 |         65000 |
 +-----------+------------+---------------+---------------+
 6 rows in set (0.00 sec)
+*/
 
 -- Delete the Mazda belonging to “Smith”.
 DELETE FROM CAR
 WHERE model='mazda' AND regno IN
 (SELECT CAR.regno FROM PERSON p, OWNS o WHERE p.driver_id=o.driver_id AND CAR.regno=o.regno AND p.name LIKE "%SMITH%");
-Query OK, 1 row affected (0.03 sec)
-
+-- Query OK, 1 row affected (0.03 sec)
 SELECT *FROM CAR;
+/*
 +------------+----------+------+
 | regno      | model    | year |
 +------------+----------+------+
@@ -231,5 +245,45 @@ SELECT *FROM CAR;
 | KA09MD3434 | BMW      | 2018 |
 +------------+----------+------+
 4 rows in set (0.00 sec)
+*/
 
+-- Update the damage amount for the car with license number “KA09MA1234” in the accident with report.
+UPDATE PARTICIPATED SET damage_amount=55000 WHERE regno='KA09MA1234';
+/*
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+*/
+SELECT * FROM PARTICIPATED;
+/*
++-----------+------------+---------------+---------------+
+| driver_id | regno      | report_number | damage_amount |
++-----------+------------+---------------+---------------+
+| 01AB11    | KA09MA1111 |          1022 |         40000 |
+| 01AB13    | KA09MA1234 |          1023 |         55000 |
+| 01AB14    | KA09MB1212 |          1024 |         60000 |
+| 01AB15    | KA09MD3434 |          1025 |        700000 |
+| 01AB14    | KA09MB1212 |          1026 |         65000 |
++-----------+------------+---------------+---------------+
+5 rows in set (0.00 sec)
+*/
 
+-- A view that shows models and year of cars that are involved in accident.
+CREATE VIEW CarModelYear AS 
+SELECT DISTINCT(model),year
+FROM CAR c,PARTICIPATED ptd
+WHERE c.regno=ptd.regno;
+--Query OK, 0 rows affected (0.04 sec)
+SELECT * FROM CarModelYear;
+/*
++----------+------+
+| model    | year |
++----------+------+
+| HARRIER  | 2019 |
+| NEXON    | 2020 |
+| MERCEDES | 2020 |
+| BMW      | 2018 |
++----------+------+
+4 rows in set (0.00 sec)
+*/
+
+-- A trigger that prevents a driver from participating in more than 3 accidents in a given year.
