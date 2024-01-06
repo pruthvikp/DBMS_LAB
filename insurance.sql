@@ -288,10 +288,10 @@ SELECT * FROM CarModelYear;
 -- A trigger that prevents a driver from participating in more than 3 accidents in a given year.
 DELIMITER //
 create trigger PreventParticipation
-before insert on participated
+before insert on PARTICIPATED
 for each row
 BEGIN
-	IF 2<=(select count(*) from participated where driver_id=new.driver_id) THEN
+	IF 2<=(select count(*) from PARTICIPATED where driver_id=new.driver_id) THEN
 		signal sqlstate '45000' set message_text='Driver has already participated in 2 accidents';
 	END IF;
 END; //
