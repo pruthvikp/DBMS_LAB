@@ -287,12 +287,19 @@ SELECT * FROM CarModelYear;
 
 -- A trigger that prevents a driver from participating in more than 3 accidents in a given year.
 DELIMITER //
-create trigger PreventParticipation
-before insert on PARTICIPATED
-for each row
+CREATE TRIGGER PreventParticipationn
+BEFORE INSERT ON PARTICIPATED
+FOR EACH ROW
 BEGIN
-	IF 2<=(select count(*) from PARTICIPATED where driver_id=new.driver_id) THEN
-		signal sqlstate '45000' set message_text='Driver has already participated in 2 accidents';
+	IF (SELECT COUNT(*) FROM PARTICIPATED WHERE driver_id=new.driver_id)>=2 THEN
+		SIGNAL SQLSTATE '45000' SET message_text='Driver has already participated in 2 accidents';
 	END IF;
 END; //
 DELIMITER ;
+
+INSERT INTO ACCIDENT VALUES
+(1027, '2023-04-04', 'Chennai');
+INSERT INTO PARTICIPATED VALUES 
+('01AB11','KA09MB1212',1027,65000);
+-- Error Code: 1644. Driver has already participated in 2 accidents
+
