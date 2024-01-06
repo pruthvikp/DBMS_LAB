@@ -21,13 +21,14 @@
 -- a sailor with a specific rating.
 -- 8. A trigger that prevents boats from being deleted If they have active reservations
 
+drop database SAILORS;
 CREATE DATABASE SAILORS;
 USE SAILORS;
 
 CREATE TABLE SAILORS(
 sid int primary key,
 sname varchar(35) not null,
-rating float not null,
+rating float(8) not null,
 age int not null
 );
 
@@ -46,8 +47,8 @@ foreign key (bid) references BOAT(bid) on delete cascade
 );
 
 INSERT INTO SAILORS VALUES
-(1,"Albert Ullagaddi", 9.8, 20),
-(2,"Ramesh Shetty",8.0, 30),
+(1,"Albert Ullagaddi", 9.8, 48),
+(2,"Ramesh Shetty",8.0, 42),
 (3,"Supriya Dodmani",7.8,40),
 (4,"Storm Smith",5.2,45),
 (5,"Warner Storm",6.5,52),
@@ -94,3 +95,38 @@ SELECT sname FROM SAILORS s WHERE NOT EXISTS
 
 -- Find name and age of the oldest sailor
 SELECT sname,age FROM SAILORS WHERE age IN (SELECT max(AGE) FROM SAILORS);
+
+-- Find each boat which was reserved by atleast 2 sailors with age>=40,
+--  find the boat id and the average age of such sailors.
+SELECT r.bid, avg(s.age) AS average_age
+FROM SAILORS s, BOAT b, RESERVES r
+WHERE s.sid=r.sid AND b.bid=r.bid AND s.age>=40
+GROUP BY b.bid HAVING COUNT(r.sid)>=2;
+
+-- Create a view that shows the names and colours of all the boats that have been reserved by a sailor with a specific rating.
+CREATE VIEW ReservedBoatByRating AS
+SELECT s.sname AS Sailor_name, b.bname AS Boat_name, b.color AS Boat_color
+FROM SAILORS s, BOAT b, RESERVES r 
+WHERE s.sid=r.sid AND b.bid=r.bid AND s.rating=9.8;
+
+SELECT *FROM ReservedBoatByRating;
+
+SELECT s.sname AS Sailor_name, b.bname AS Boat_name, b.color AS Boat_color
+FROM SAILORS s, BOAT b, RESERVES r 
+WHERE s.sid=r.sid AND b.bid=r.bid AND s.rating=9.8;
+
+-- A trigger that prevents boats from being deleted If they have active reservations
+DELIMITER //
+CREATE TRIGGER CheckAndDelete
+BEFORE DELETE ON BOAT
+FOR EACH ROW
+BEGIN
+	IF EXISTS (SELECT *FROM RESERVES WHERE RESERVES.bid=old.bid) THEN
+		SIGNAL SQLSTATE '45000' SET message_text="Boat is reserved and hence cannot be deleted";
+	END IF;
+END;
+// DELIMITER ;
+
+DELETE FROM BOAT WHERE bid=103;
+
+
