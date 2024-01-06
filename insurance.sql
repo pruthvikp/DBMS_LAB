@@ -155,4 +155,63 @@ SELECT *FROM PARTICIPATED;
 +-----------+------------+---------------+---------------+
 5 rows in set (0.00 sec)
 
+  
+-- Find the total number of people who owned cars that were involved in accidents in 2021
+SELECT COUNT(driver_id) 
+FROM PARTICIPATED p, ACCIDENT a
+WHERE p.report_number=a.report_number AND a.acc_date LIKE "2021%";
++------------------+
+| COUNT(driver_id) |
++------------------+
+|                3 |
++------------------+
+1 row in set (0.03 sec)
+
+-- Find the number of accidents in which the cars belonging to “Smith” were involved.
+SELECT COUNT(DISTINCT a.report_number) 
+FROM PARTICIPATED ptd, PERSON p, ACCIDENT a 
+WHERE ptd.driver_id=p.driver_id and ptd.report_number=a.report_number AND p.name LIKE '%smith%';
++---------------------------------+
+| COUNT(DISTINCT a.report_number) |
++---------------------------------+
+|                               2 |
++---------------------------------+
+1 row in set (0.01 sec)
+
+-- Add a new accident to the database; assume any values for required attributes.
+INSERT INTO ACCIDENT VALUES
+(1026, '2023-04-04', 'Chennai');
+Query OK, 1 row affected (0.04 sec)
+  
+INSERT INTO PARTICIPATED VALUES 
+('01AB14','KA09MB1212',1026,65000);
+Query OK, 1 row affected (0.04 sec)
+
+SELECT *FROM ACCIDENT;
++---------------+------------+-----------+
+| report_number | acc_date   | location  |
++---------------+------------+-----------+
+|          1021 | 2021-01-01 | Mysuru    |
+|          1022 | 2021-02-01 | Bengaluru |
+|          1023 | 2021-03-01 | Mumbai    |
+|          1024 | 2022-01-01 | Chennai   |
+|          1025 | 2023-01-01 | Bengaluru |
+|          1026 | 2023-04-04 | Chennai   |
++---------------+------------+-----------+
+6 rows in set (0.00 sec)
+
+SELECT *FROM PARTICIPATED;
++-----------+------------+---------------+---------------+
+| driver_id | regno      | report_number | damage_amount |
++-----------+------------+---------------+---------------+
+| 01AB11    | KA09MC5656 |          1021 |         30000 |
+| 01AB11    | KA09MA1111 |          1022 |         40000 |
+| 01AB13    | KA09MA1234 |          1023 |         50000 |
+| 01AB14    | KA09MB1212 |          1024 |         60000 |
+| 01AB15    | KA09MD3434 |          1025 |        700000 |
+| 01AB14    | KA09MB1212 |          1026 |         65000 |
++-----------+------------+---------------+---------------+
+6 rows in set (0.00 sec)
+
+
 
