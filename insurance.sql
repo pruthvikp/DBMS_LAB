@@ -167,6 +167,7 @@ WHERE p.report_number=a.report_number AND a.acc_date LIKE "2021%";
 +------------------+
 1 row in set (0.03 sec)
 
+  
 -- Find the number of accidents in which the cars belonging to “Smith” were involved.
 SELECT COUNT(DISTINCT a.report_number) 
 FROM PARTICIPATED ptd, PERSON p, ACCIDENT a 
@@ -178,6 +179,7 @@ WHERE ptd.driver_id=p.driver_id and ptd.report_number=a.report_number AND p.name
 +---------------------------------+
 1 row in set (0.01 sec)
 
+  
 -- Add a new accident to the database; assume any values for required attributes.
 INSERT INTO ACCIDENT VALUES
 (1026, '2023-04-04', 'Chennai');
@@ -213,5 +215,21 @@ SELECT *FROM PARTICIPATED;
 +-----------+------------+---------------+---------------+
 6 rows in set (0.00 sec)
 
+-- Delete the Mazda belonging to “Smith”.
+DELETE FROM CAR
+WHERE model='mazda' AND regno IN
+(SELECT CAR.regno FROM PERSON p, OWNS o WHERE p.driver_id=o.driver_id AND CAR.regno=o.regno AND p.name LIKE "%SMITH%");
+Query OK, 1 row affected (0.03 sec)
+
+SELECT *FROM CAR;
++------------+----------+------+
+| regno      | model    | year |
++------------+----------+------+
+| KA09MA1111 | HARRIER  | 2019 |
+| KA09MA1234 | NEXON    | 2020 |
+| KA09MB1212 | MERCEDES | 2020 |
+| KA09MD3434 | BMW      | 2018 |
++------------+----------+------+
+4 rows in set (0.00 sec)
 
 
