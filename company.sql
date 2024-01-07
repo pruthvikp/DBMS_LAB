@@ -107,4 +107,75 @@ INSERT INTO WORKS_ON VALUES
 ('01AB126', 503, 8),
 ('01AB127', 504, 6);
 
+ALTER TABLE EMPLOYEE ADD CONSTRAINT FOREIGN KEY (dno) REFERENCES DEPARTMENT(dno) ON DELETE CASCADE;
+
+SELECT *FROM EMPLOYEE;
+/*
++---------+--------+--------------+------+--------+----------+-----+
+| SSN     | name   | address      | sex  | salary | superSSN | dno |
++---------+--------+--------------+------+--------+----------+-----+
+| 01AB123 | Indra  | Indranagar   | Male | 400000 | 01AB123  |   1 |
+| 01AB124 | Varuna | Banshankari  | Male | 500000 | 01AB123  |   2 |
+| 01AB125 | Agni   | Hebbal       | Male | 600000 | 01AB123  |   2 |
+| 01AB126 | Vaayu  | Vijaynagar   | Male | 700000 | 01AB126  |   3 |
+| 01AB127 | Scott  | Kuvempunagar | Male | 800000 | 01AB126  |   4 |
++---------+--------+--------------+------+--------+----------+-----+
+5 rows in set (0.00 sec)
+*/
+
+SELECT *FROM DEPARTMENT;
+/*
++-----+--------------------+---------+---------------+
+| dno | dname              | mgrSSN  | mgr_startdate |
++-----+--------------------+---------+---------------+
+|   1 | Accounts           | 01AB123 | 2021-01-01    |
+|   2 | Water Resources    | 01AB124 | 2021-02-02    |
+|   3 | Production         | 01AB125 | 2021-03-03    |
+|   4 | Quality Assessment | 01AB126 | 2022-01-01    |
+|   5 | Human Resources    | 01AB127 | 2022-02-02    |
++-----+--------------------+---------+---------------+
+5 rows in set (0.01 sec)
+*/
+
+SELECT *FROM DLOCATION;
+/*
++-----+-----------+
+| dno | dloc      |
++-----+-----------+
+|   1 | Bengaluru |
+|   2 | Pune      |
+|   3 | Chennai   |
+|   4 | Bengaluru |
+|   5 | Mysuru    |
++-----+-----------+
+5 rows in set (0.00 sec)
+*/
+
+SELECT *FROM PROJECT;
+/*
++-----+----------------------+----------------------+-----+
+| pno | pname                | plocation            | dno |
++-----+----------------------+----------------------+-----+
+| 501 | Market Evaluation    | Dodballapura         |   1 |
+| 502 | IOT                  | Andheri              |   2 |
+| 503 | Product Optimization | Chennai              |   2 |
+| 504 | Yeild Increase       | Yelahanka            |   4 |
+| 505 | Product Refinement   | Kuvempunagar, Mysuru |   5 |
++-----+----------------------+----------------------+-----+
+5 rows in set (0.00 sec)
+*/
+
+SELECT * FROM WORKS_ON;
+/*
++---------+-----+-------+
+| SSN     | pno | hours |
++---------+-----+-------+
+| 01AB123 | 501 |     6 |
+| 01AB124 | 502 |     7 |
+| 01AB125 | 503 |     8 |
+| 01AB126 | 503 |     8 |
+| 01AB127 | 504 |     6 |
++---------+-----+-------+
+5 rows in set (0.00 sec)
+*/
 
