@@ -270,3 +270,18 @@ SELECT * FROM CoursesAndMarks;
 */
 
 -- Create a trigger that prevents a student from enrolling in a course if the marks prerequisite is less than 40
+DELIMITER $$
+CREATE TRIGGER PreventEnrollment 
+BEFORE INSERT ON ENROLL 
+FOR EACH ROW 
+BEGIN 
+ IF (new.marks<=40) THEN 
+  SIGNAL SQLSTATE '45000' SET message_text='Cannot enroll student: Marks is below threshold'; 
+ END IF; 
+END; $$
+-- Query OK, 0 rows affected (0.03 sec)
+DELIMITER ;
+
+INSERT INTO ENROLL VALUES
+('CA210796', 2, 5, 20);
+-- ERROR 1644 (45000): Cannot enroll student: Marks is below threshold
