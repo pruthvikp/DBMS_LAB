@@ -299,7 +299,7 @@ CREATE TRIGGER UpdateOrderAmount
 AFTER INSERT ON ORDER_ITEM
 FOR EACH ROW
 BEGIN
-UPDATE ORDERS SET order_amt=(new.qty*(SELECT DISTINCT unitprice FROM ITEM NATURAL JOIN ORDER_ITEM WHERE item_id=new.item_id)) WHERE ORDERS.order_id=NEW.order_id;
+UPDATE ORDERS SET order_amt=(new.qty*(SELECT unitprice FROM ITEM WHERE item_id=new.item_id)) WHERE ORDERS.order_id=NEW.order_id;
 END; $$
 -- Query OK, 0 rows affected (0.06 sec)
 DELIMITER ;
