@@ -269,3 +269,4 @@ SELECT * FROM CoursesAndMarks;
 2 rows in set (0.00 sec)
 */
 
+-- Create a trigger that prevents a student from enrolling in a course if the marks prerequisite is less than 40
