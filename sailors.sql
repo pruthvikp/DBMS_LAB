@@ -195,30 +195,6 @@ SELECT sname,age FROM SAILORS WHERE age IN (SELECT max(AGE) FROM SAILORS);
 1 row in set (0.00 sec)
 */
 
--- Find the names of sailors who have reserved all boats.
-SELECT sname FROM SAILORS s WHERE NOT EXISTS
-(SELECT * FROM BOAT b WHERE NOT EXISTS
-(SELECT * FROM RESERVES r WHERE s.sid=r.sid and b.bid=r.bid));
-/*
-+------------------+
-| sname            |
-+------------------+
-| Albert Ullagaddi |
-+------------------+
-1 row in set (0.00 sec)
-*/
-
--- Find name and age of the oldest sailor
-SELECT sname,age FROM SAILORS WHERE age IN (SELECT max(AGE) FROM SAILORS);
-/*
-+-------------+-----+
-| sname       | age |
-+-------------+-----+
-| John Storms |  56 |
-+-------------+-----+
-1 row in set (0.00 sec)
-*/
-
 
 -- Find each boat which was reserved by atleast 2 sailors with age>=40,
 --  find the boat id and the average age of such sailors.
