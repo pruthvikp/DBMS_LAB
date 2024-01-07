@@ -132,4 +132,14 @@ FROM COURSE c, BOOK_ADOPTION b, TEXT t
 WHERE b.book_ISBN = t.book_ISBN AND b.course_id = c.course_id AND t.publisher = 'Sushma Publishers';
 
 -- List the students who have scored maximum marks in ‘DBMS’ course
+SELECT name 
+FROM STUDENT s,COURSE c,ENROLL e
+WHERE s.regno=e.regno AND c.course_id=e.course_id
+AND e.marks=(SELECT MAX(e.marks) FROM ENROLL e, COURSE c WHERE c.course_id=e.course_id AND cname='DBMS');
 
+-- Create a view to display all the courses opted by a student along with marks obtained.
+CREATE VIEW CoursesAndMarks AS
+SELECT cname, marks
+FROM COURSE c, ENROLL e, STUDENT s
+WHERE e.regno=s.regno AND e.course_id=c.course_id AND s.regno='CA210796';
+SELECT * FROM CoursesAndMarks;
