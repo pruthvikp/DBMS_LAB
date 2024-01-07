@@ -28,7 +28,7 @@ USE SAILORS;
 CREATE TABLE SAILORS(
 sid int primary key,
 sname varchar(35) not null,
-rating float(8) not null,
+rating int not null,
 age int not null
 );
 
@@ -47,12 +47,12 @@ foreign key (bid) references BOAT(bid) on delete cascade
 );
 
 INSERT INTO SAILORS VALUES
-(1,"Albert Ullagaddi", 9.8, 48),
-(2,"Ramesh Shetty",8.0, 42),
-(3,"Supriya Dodmani",7.8,40),
-(4,"Storm Smith",5.2,45),
-(5,"Warner Storm",6.5,52),
-(6,"John Storms",8.2,56);
+(1,"Albert Ullagaddi",9, 48),
+(2,"Ramesh Shetty",8, 42),
+(3,"Supriya Dodmani",7,40),
+(4,"Storm Smith",5,45),
+(5,"Warner Storm",6,52),
+(6,"John Storms",8,56);
 
 INSERT INTO BOAT VALUES
 (101,"Vikramaditya", "Blue"),
@@ -241,16 +241,35 @@ GROUP BY b.bid HAVING COUNT(r.sid)>=2;
 CREATE VIEW ReservedBoatByRating AS
 SELECT s.sname AS Sailor_name, b.bname AS Boat_name, b.color AS Boat_color
 FROM SAILORS s, BOAT b, RESERVES r 
-WHERE s.sid=r.sid AND b.bid=r.bid AND s.rating=9.8;
+WHERE s.sid=r.sid AND b.bid=r.bid AND s.rating=8;
 
 SELECT *FROM ReservedBoatByRating;
-
-SELECT s.sname AS Sailor_name, b.bname AS Boat_name, b.color AS Boat_color
+/*
++---------------+--------------+------------+
+| Sailor_name   | Boat_name    | Boat_color |
++---------------+--------------+------------+
+| Ramesh Shetty | Vikramaditya | Blue       |
++---------------+--------------+------------+
+*/
+CREATE VIEW ReservedBoatByRating9 AS
+SELECT s.sname AS Sailor_name, b.bname AS Boat_name, b.color AS Boat_color 
 FROM SAILORS s, BOAT b, RESERVES r 
-WHERE s.sid=r.sid AND b.bid=r.bid AND s.rating=9.8;
+WHERE s.sid=r.sid AND b.bid=r.bid AND s.rating=9;
+
+SELECT *FROM ReservedBoatByRating9;
+/*
++------------------+--------------+------------+
+| Sailor_name      | Boat_name    | Boat_color |
++------------------+--------------+------------+
+| Albert Ullagaddi | Vikramaditya | Blue       |
+| Albert Ullagaddi | Titanic      | White      |
+| Albert Ullagaddi | Vikranth     | Red        |
++------------------+--------------+------------+
+3 rows in set (0.00 sec)
+*/
 
 -- A trigger that prevents boats from being deleted If they have active reservations
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER CheckAndDelete
 BEFORE DELETE ON BOAT
 FOR EACH ROW
@@ -258,9 +277,10 @@ BEGIN
 	IF EXISTS (SELECT *FROM RESERVES WHERE RESERVES.bid=old.bid) THEN
 		SIGNAL SQLSTATE '45000' SET message_text="Boat is reserved and hence cannot be deleted";
 	END IF;
-END;
-// DELIMITER ;
+END; $$
+-- Query OK, 0 rows affected (0.05 sec)
+DELIMITER ;
 
 DELETE FROM BOAT WHERE bid=103;
--- Error 1645: Boat is reserved and hence cannot be deleted
+-- ERROR 1644 (45000): Boat is reserved and hence cannot be deleted
 
