@@ -5,20 +5,20 @@
 -- foreign keys.
 -- Enter at least five tuples for each relation.
 -- Insurance database
-/* 
- PERSON (driver id#: string, name: string, address: string)
-CAR (regno: string, model: string, year: int)
-ACCIDENT (report_ number: int, acc_date: date, location: string)
-OWNS (driver id#: string, regno: string)
-PARTICIPATED(driver id#:string, regno:string, report_ number: int,damage_amount: int)
-1. Find the total number of people who owned cars that were involved in accidents in 2021.
-2. Find the number of accidents in which the cars belonging to “Smith” were involved.
-3. Add a new accident to the database; assume any values for required attributes.
-4. Delete the Mazda belonging to “Smith”.
-5. Update the damage amount for the car with license number “KA09MA1234” in the accident with report.
-6. A view that shows models and year of cars that are involved in accident.
-7. A trigger that prevents a driver from participating in more than 3 accidents in a given year.
-*/
+
+-- PERSON (driver id#: string, name: string, address: string)
+-- CAR (regno: string, model: string, year: int)
+-- ACCIDENT (report_ number: int, acc_date: date, location: string)
+-- OWNS (driver id#: string, regno: string)
+-- PARTICIPATED(driver id#:string, regno:string, report_ number: int,damage_amount: int)
+-- 1. Find the total number of people who owned cars that were involved in accidents in 2021.
+-- 2. Find the number of accidents in which the cars belonging to “Smith” were involved.
+-- 3. Add a new accident to the database; assume any values for required attributes.
+-- 4. Delete the Mazda belonging to “Smith”.
+-- 5. Update the damage amount for the car with license number “KA09MA1234” in the accident with report.
+-- 6. A view that shows models and year of cars that are involved in accident.
+-- 7. A trigger that prevents a driver from participating in more than 3 accidents in a given year.
+
 
 CREATE DATABASE INSURANCE;
 USE INSURANCE;
