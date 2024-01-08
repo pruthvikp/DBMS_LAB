@@ -255,8 +255,8 @@ AND e.marks=(SELECT MAX(e.marks) FROM ENROLL e, COURSE c WHERE c.course_id=e.cou
 -- Create a view to display all the courses opted by a student along with marks obtained.
 CREATE VIEW CoursesAndMarks AS
 SELECT cname, marks
-FROM COURSE c, ENROLL e, STUDENT s
-WHERE e.regno=s.regno AND e.course_id=c.course_id AND s.regno='CA210796';
+FROM COURSE c, ENROLL e
+WHERE e.course_id=c.course_id AND s.regno='CA210796';
 
 SELECT * FROM CoursesAndMarks;
 /*
