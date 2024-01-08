@@ -250,7 +250,7 @@ CREATE TRIGGER CheckAndDelete
 BEFORE DELETE ON BOAT
 FOR EACH ROW
 BEGIN
-	IF EXISTS (SELECT *FROM RESERVES WHERE RESERVES.bid=old.bid) THEN
+	IF EXISTS (SELECT *FROM RESERVES WHERE bid=old.bid) THEN
 		SIGNAL SQLSTATE '45000' SET message_text="Boat is reserved and hence cannot be deleted";
 	END IF;
 END; $$
