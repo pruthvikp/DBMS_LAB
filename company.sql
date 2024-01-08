@@ -181,7 +181,17 @@ SELECT * FROM WORKS_ON;
 
 -- Make a list of all project numbers for projects that involve an employee whose last name
 -- is ‘Scott’, either as a worker or as a manager of the department that controls the project.
-
+SELECT w.pno,p.pname 
+FROM WORKS_ON w, PROJECT p, EMPLOYEE e 
+WHERE w.pno=p.pno AND e.SSN=w.SSN AND e.name LIKE '%scott%';
+/*
++-----+----------------+
+| pno | pname          |
++-----+----------------+
+| 504 | Yeild Increase |
++-----+----------------+
+1 row in set (0.00 sec)
+*/
 
 -- Show the resulting salaries if every employee working on the ‘IoT’ project is given a 10 percent raise.
 SELECT name,salary as old_salary,salary*1.1 as new_salary, pname  
