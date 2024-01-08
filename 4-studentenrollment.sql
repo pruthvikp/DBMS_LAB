@@ -239,9 +239,9 @@ WHERE b.book_ISBN = t.book_ISBN AND b.course_id = c.course_id AND t.publisher = 
 */
 
 -- List the students who have scored maximum marks in ‘DBMS’ course
-SELECT name 
-FROM STUDENT s,COURSE c,ENROLL e
-WHERE s.regno=e.regno AND c.course_id=e.course_id
+SELECT DISTINT(name)
+FROM STUDENT s,ENROLL e
+WHERE s.regno=e.regno 
 AND e.marks=(SELECT MAX(e.marks) FROM ENROLL e, COURSE c WHERE c.course_id=e.course_id AND cname='DBMS');
 /*
 +----------+
